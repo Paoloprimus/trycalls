@@ -41,12 +41,18 @@ export async function GET(request: Request) {
   }
 
   // Disattiva opportunità scadute
-  const { count } = await supabase
+  await supabase
     .from('opportunities')
     .update({ is_active: false })
     .lt('deadline', new Date().toISOString().split('T')[0])
     .eq('is_active', true)
-    .select('*', { count: 'exact', head: true })
+
+  return Response.json({
+    inserted,
+    updated,
+    deactivated: 0,
+    errors,
+  })
 
   return Response.json({
     inserted,
