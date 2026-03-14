@@ -2,7 +2,6 @@ import { createClient } from '@/lib/supabase/server'
 import { matchOpportunities, daysUntil, type Opportunity, type Profile } from '@/lib/matching'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import type React from 'react'
 
 function DeadlineBadge({ deadline }: { deadline: string | null }) {
   const days = daysUntil(deadline)
@@ -52,8 +51,7 @@ function OpportunityCard({ opp }: { opp: Opportunity }) {
         href={opp.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-block text-sm font-medium px-4 py-1.5 rounded-lg text-white transition-opacity hover:opacity-90"
-        style={{ backgroundColor: '#2E86C1' } as React.CSSProperties}
+        className="inline-block text-sm font-medium px-4 py-1.5 rounded-lg text-white bg-blue-500 transition-opacity hover:opacity-90"
       >
         Scopri di più →
       </a>
@@ -105,8 +103,7 @@ export default async function DashboardPage() {
           </p>
           <Link
             href="/profilo/setup"
-            className="text-sm font-medium"
-            style={{ color: '#2E86C1' }}
+            className="text-sm font-medium text-blue-500"
           >
             Modifica le tue preferenze →
           </Link>
