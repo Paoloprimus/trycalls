@@ -124,10 +124,3 @@ export async function fetchCordisOpportunities(): Promise<OpportunityInsert[]> {
     return []
   }
 }
-```
-
-Poi:
-```
-git add .
-git commit -m "fix cordis fetcher with correct EU funding API"
-git push
