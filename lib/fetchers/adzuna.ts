@@ -1,14 +1,14 @@
 import type { OpportunityInsert } from './cordis'
 
 export async function fetchAdzunaJobs(): Promise<OpportunityInsert[]> {
-  try {
-    const controller = new AbortController()
-    const timeout = setTimeout(() => controller.abort(), 15000)
+  const countries = ['it', 'de', 'fr', 'gb', 'es', 'nl', 'pl']
+  const allJobs: OpportunityInsert[] = []
 
-    const countries = ['it', 'de', 'fr', 'gb', 'es', 'nl', 'pl']
-    const allJobs: OpportunityInsert[] = []
+  for (const country of countries) {
+    try {
+      const controller = new AbortController()
+      const timeout = setTimeout(() => controller.abort(), 10000)
 
-    for (const country of countries) {
       const params = new URLSearchParams({
         app_id: process.env.ADZUNA_APP_ID!,
         app_key: process.env.ADZUNA_APP_KEY!,
@@ -21,6 +21,7 @@ export async function fetchAdzunaJobs(): Promise<OpportunityInsert[]> {
         `https://api.adzuna.com/v1/api/jobs/${country}/search/1?${params}`,
         { signal: controller.signal }
       )
+      clearTimeout(timeout)
 
       console.log(`Adzuna ${country}: status=${res.status}`)
 
@@ -53,16 +54,13 @@ export async function fetchAdzunaJobs(): Promise<OpportunityInsert[]> {
           raw: job,
         })
       }
+    } catch (err) {
+      console.error(`Adzuna ${country} exception:`, String(err))
     }
-
-    clearTimeout(timeout)
-    console.log(`Adzuna total jobs collected: ${allJobs.length}`)
-    return allJobs
-
-  } catch (err) {
-    console.error('Adzuna fetch error:', err)
-    return []
   }
+
+  console.log(`Adzuna total jobs collected: ${allJobs.length}`)
+  return allJobs
 }
 
 function mapJobAreas(title: string, description: string): string[] {
