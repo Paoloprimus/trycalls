@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
-import { fetchCordisOpportunities } from '@/lib/fetchers/cordis'
+import { fetchAdzunaJobs } from '@/lib/fetchers/adzuna'
 
-export const maxDuration = 30
+export const maxDuration = 60
 
 export async function GET(request: Request) {
   const auth = request.headers.get('authorization')
@@ -14,50 +14,33 @@ export async function GET(request: Request) {
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   )
 
-  const results = await Promise.allSettled([
-    fetchCordisOpportunities(),
-  ])
-
   let inserted = 0
-  let updated = 0
   let errors: string[] = []
 
-  for (const result of results) {
-    if (result.status === 'rejected') {
-      errors.push(String(result.reason))
-      continue
-    }
-    for (const opp of result.value) {
-      if (!opp.external_id) continue
+  try {
+    const opportunities = await fetchAdzunaJobs()
+
+    if (opportunities.length > 0) {
       const { error } = await supabase
         .from('opportunities')
-        .upsert(opp, { onConflict: 'external_id' })
+        .upsert(opportunities, { onConflict: 'external_id' })
+
       if (error) {
         errors.push(error.message)
       } else {
-        inserted++
+        inserted = opportunities.length
       }
     }
+
+    await supabase
+      .from('opportunities')
+      .update({ is_active: false })
+      .lt('deadline', new Date().toISOString().split('T')[0])
+      .eq('is_active', true)
+
+  } catch (err) {
+    errors.push(String(err))
   }
 
-  // Disattiva opportunità scadute
-  await supabase
-    .from('opportunities')
-    .update({ is_active: false })
-    .lt('deadline', new Date().toISOString().split('T')[0])
-    .eq('is_active', true)
-
-  return Response.json({
-    inserted,
-    updated,
-    deactivated: 0,
-    errors,
-  })
-
-  return Response.json({
-    inserted,
-    updated,
-    deactivated: 0,
-    errors,
-  })
+  return Response.json({ inserted, errors })
 }
