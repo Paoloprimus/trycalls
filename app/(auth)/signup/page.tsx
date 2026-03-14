@@ -12,31 +12,52 @@ export default function SignupPage() {
   const [confirm, setConfirm] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [confirmed, setConfirmed] = useState(false)
 
-  async function handleSignup() {
-    setError('')
-    if (password.length < 6) {
-      setError('La password deve essere di almeno 6 caratteri.')
-      return
-    }
-    if (password !== confirm) {
-      setError('Le password non coincidono.')
-      return
-    }
-    setLoading(true)
-    const supabase = createClient()
-    const { error } = await supabase.auth.signUp({ email, password })
-    if (error) {
-      setError(error.message.includes('already registered')
-        ? 'Email già registrata. Prova ad accedere.'
-        : 'Errore di rete. Riprova.')
-      setLoading(false)
-      return
-    }
-    router.push('/profilo/setup')
+async function handleSignup() {
+  setError('')
+  if (password.length < 6) {
+    setError('La password deve essere di almeno 6 caratteri.')
+    return
   }
+  if (password !== confirm) {
+    setError('Le password non coincidono.')
+    return
+  }
+  setLoading(true)
+  const supabase = createClient()
+  const { error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      emailRedirectTo: `${window.location.origin}/auth/callback`,
+    },
+  })
+  if (error) {
+    setError(error.message.includes('already registered')
+      ? 'Email già registrata. Prova ad accedere.'
+      : 'Errore di rete. Riprova.')
+    setLoading(false)
+    return
+  }
+  setLoading(false)
+  setConfirmed(true)
+}
 
   return (
+    if (confirmed) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="w-full max-w-md p-8 bg-white rounded-2xl shadow-sm border border-gray-100 text-center space-y-4">
+        <h1 className="text-2xl font-bold" style={{ color: '#1E3A5F' }}>Controlla la tua email</h1>
+        <p className="text-sm text-gray-500">
+          Ti abbiamo inviato un link di conferma a <strong>{email}</strong>.<br />
+          Clicca il link per completare la registrazione.
+        </p>
+      </div>
+    </div>
+  )
+}
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="w-full max-w-md p-8 bg-white rounded-2xl shadow-sm border border-gray-100">
         <h1 className="text-2xl font-bold mb-1" style={{ color: '#1E3A5F' }}>Crea il tuo account</h1>
