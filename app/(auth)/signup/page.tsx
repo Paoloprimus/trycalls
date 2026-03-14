@@ -25,14 +25,14 @@ export default function SignupPage() {
     setLoading(true)
     const supabase = createClient()
     const { data, error } = await supabase.auth.signUp({
-    console.log('signup data:', JSON.stringify(data))
-    console.log('signup error:', JSON.stringify(error)) 
       email,
       password,
       options: {
         emailRedirectTo: `${window.location.origin}/auth/callback`,
       },
     })
+    console.log('signup data:', JSON.stringify(data))
+    console.log('signup error:', JSON.stringify(error))
     if (error) {
       setError(error.message.includes('already registered')
         ? 'Email già registrata. Prova ad accedere.'
