@@ -21,10 +21,10 @@ export async function fetchAdzunaJobs(): Promise<OpportunityInsert[]> {
         sort_by: 'date',
       })
 
-      const res = await fetch(
-        `https://api.adzuna.com/v1/api/jobs/${country}/search/1?${params}`,
-        { signal: controller.signal }
-      )
+      const url = `https://api.adzuna.com/v1/api/jobs/${country}/search/1?${params}`
+      console.log(`Adzuna ${country} URL:`, url)
+
+      const res = await fetch(url, { signal: controller.signal })
       clearTimeout(timeout)
 
       console.log(`Adzuna ${country}: status=${res.status}`)
