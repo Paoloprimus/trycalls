@@ -3,7 +3,8 @@ import { fetchAdzunaJobs } from '@/lib/fetchers/adzuna'
 
 export const maxDuration = 60
 
-export async function GET(request: Request) {
+export async function POST(request: Request) {
+  
   const auth = request.headers.get('authorization')
   if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
     return Response.json({ error: 'Unauthorized' }, { status: 401 })
