@@ -17,7 +17,7 @@ export async function fetchAdzunaJobs(): Promise<OpportunityInsert[]> {
         app_id: process.env.ADZUNA_APP_ID!,
         app_key: process.env.ADZUNA_APP_KEY!,
         results_per_page: '20',
-        what: 'graduate OR junior OR trainee OR internship OR erasmus OR fellowship',
+        what: 'junior internship trainee fellowship graduate',
         sort_by: 'date',
       })
 
