@@ -4,6 +4,10 @@ export async function fetchAdzunaJobs(): Promise<OpportunityInsert[]> {
   const countries = ['it', 'de', 'fr', 'gb', 'es', 'nl', 'pl']
   const allJobs: OpportunityInsert[] = []
 
+  console.log('ADZUNA_APP_ID present:', !!process.env.ADZUNA_APP_ID)
+  console.log('ADZUNA_APP_KEY present:', !!process.env.ADZUNA_APP_KEY)
+  console.log('countries to process:', countries.length)
+
   for (const country of countries) {
     try {
       const controller = new AbortController()
