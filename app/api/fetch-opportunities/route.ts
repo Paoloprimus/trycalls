@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
-import { fetchAdzunaJobs } from '@/lib/fetchers/adzuna'
+import { fetchTheMuseJobs } from '@/lib/fetchers/themuse'
 
 export const maxDuration = 60
 
@@ -19,7 +19,7 @@ export async function POST(request: Request) {
   let errors: string[] = []
 
   try {
-    const opportunities = await fetchAdzunaJobs()
+    const opportunities = await fetchTheMuseJobs()
 
     if (opportunities.length > 0) {
       const { error } = await supabase
