@@ -53,7 +53,7 @@ function OpportunityCard({ opp }: { opp: Opportunity }) {
         rel="noopener noreferrer"
         className="inline-block text-sm font-medium px-4 py-1.5 rounded-lg text-white bg-blue-500 transition-opacity hover:opacity-90"
       >
-        Scopri di più →
+        Scopri di più
       </a>
     </div>
   )
