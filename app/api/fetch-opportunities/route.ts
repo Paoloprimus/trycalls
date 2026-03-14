@@ -57,7 +57,7 @@ export async function GET(request: Request) {
   return Response.json({
     inserted,
     updated,
-    deactivated: count ?? 0,
+    deactivated: 0,
     errors,
   })
 }
