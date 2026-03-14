@@ -22,9 +22,16 @@ export async function fetchAdzunaJobs(): Promise<OpportunityInsert[]> {
         { signal: controller.signal }
       )
 
-      if (!res.ok) continue
+      console.log(`Adzuna ${country}: status=${res.status}`)
+
+      if (!res.ok) {
+        const text = await res.text()
+        console.error(`Adzuna ${country} error:`, text.slice(0, 200))
+        continue
+      }
 
       const data = await res.json()
+      console.log(`Adzuna ${country}: results=${data?.results?.length ?? 0}`)
       const results = data?.results ?? []
 
       for (const job of results) {
@@ -49,6 +56,7 @@ export async function fetchAdzunaJobs(): Promise<OpportunityInsert[]> {
     }
 
     clearTimeout(timeout)
+    console.log(`Adzuna total jobs collected: ${allJobs.length}`)
     return allJobs
 
   } catch (err) {
