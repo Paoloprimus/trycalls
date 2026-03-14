@@ -97,12 +97,3 @@ export default function SignupPage() {
     </div>
   )
 }
-```
-
----
-
-Crea la cartella `app/(auth)/login/` e `app/(auth)/signup/`, metti i file dentro, poi:
-```
-git add .
-git commit -m "add auth pages"
-git push
